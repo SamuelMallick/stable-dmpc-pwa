@@ -1,6 +1,9 @@
 import itertools
+
 import cvxpy as cp
 import numpy as np
+from scipy.linalg import block_diag
+
 from model import (
     get_A_c,
     get_adj,
@@ -8,7 +11,6 @@ from model import (
     get_local_coupled_systems,
     get_terminal_K,
 )
-from scipy.linalg import block_diag
 
 systems = get_local_coupled_systems()
 Q_l, R_l = get_cost_matrices()

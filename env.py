@@ -1,19 +1,22 @@
 from typing import Any
+
 import casadi as cs
 import gymnasium as gym
 import numpy as np
 import numpy.typing as npt
-from model import get_cent_system, get_cost_matrices, get_IC
 from scipy.linalg import block_diag
 
+from model import get_cent_system, get_cost_matrices, get_IC
+
 np.random.seed(1)
+
 
 class Network(gym.Env[npt.NDArray[np.floating], npt.NDArray[np.floating]]):
     """Netork of dynamically coupled PWA systems."""
 
     Q_x_l, Q_u_l = get_cost_matrices()
 
-    n = 3   # num sub-systems
+    n = 3  # num sub-systems
 
     x0 = get_IC()
 

@@ -1,6 +1,5 @@
 import gurobipy as gp
 import numpy as np
-from dmpcpwa.agents.no_control_agent import NoControlAgent
 from dmpcpwa.agents.mld_agent import MldAgent
 from dmpcpwa.mpc.mpc_mld import MpcMld
 from gymnasium.wrappers import TimeLimit
@@ -12,7 +11,7 @@ from model import get_cent_system, get_cost_matrices, get_inv_set, get_terminal_
 from plotting import plot_system
 
 N = 5
-n = 3   # num sub-systems
+n = 3  # num sub-systems
 ep_len = 30
 
 
@@ -41,6 +40,7 @@ class Cent_MPC(MpcMld):
         self.mpc_model.addConstrs(
             self.A @ self.x[i : i + 2, [N]] <= self.b for i in range(0, 2 * n, 2)
         )
+
 
 # controller
 mpc = Cent_MPC(get_cent_system(), N)

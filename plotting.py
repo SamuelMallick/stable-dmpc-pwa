@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 
+
 def plot_system(X, U):
     for i in range(3):
         plt.plot(X[0, 2 * i], X[0, 2 * i + 1], "o", color=f"C{i}")

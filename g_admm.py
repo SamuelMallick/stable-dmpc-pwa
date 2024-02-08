@@ -1,6 +1,5 @@
 import logging
 import pickle
-import sys
 from typing import Literal
 
 import casadi as cs
@@ -15,6 +14,12 @@ from dmpcpwa.mpc.mpc_switching import MpcSwitching
 from dmpcrl.core.admm import g_map
 from dmpcrl.mpc.mpc_admm import MpcAdmm
 from gymnasium.wrappers import TimeLimit
+from mpcrl.util.seeding import RngType
+from mpcrl.wrappers.agents import Log
+from mpcrl.wrappers.envs import MonitorEpisodes
+from scipy.linalg import block_diag
+
+from env import Network
 from model import (
     get_adj,
     get_cent_system,
@@ -26,22 +31,19 @@ from model import (
     get_terminal_K,
     get_warm_start,
 )
-from mpcrl.util.seeding import RngType
-from mpcrl.wrappers.agents import Log
-from mpcrl.wrappers.envs import MonitorEpisodes
-from scipy.linalg import block_diag
-from env import Network
 from plotting import plot_system
 
 PLOT = True
 SAVE = False
 
 CONTROL = True  # if False the open loop uncontrolled system runs
-MULTIPLE_ICS = False    # if True the simulation is run for all ICs in the ICs.csv file
-SAVE_WARM_START = False # if True the warm_start calculated in the first step is saved in u.pkl file
-CENT_WARM_START = False # if True a centralized MLD controller is used to find an initial feasible solution in the first time step
-MODEL_WARM_START = False    # if True an initial feasible solution, saved in the model.py file is used in the first time step
-USE_TERM_CONTROLLER = False # if True local systems switch to their terminal controllers when locally in terminal set, even if other sub-systems are out of the terminal set 
+MULTIPLE_ICS = False  # if True the simulation is run for all ICs in the ICs.csv file
+SAVE_WARM_START = (
+    False  # if True the warm_start calculated in the first step is saved in u.pkl file
+)
+CENT_WARM_START = False  # if True a centralized MLD controller is used to find an initial feasible solution in the first time step
+MODEL_WARM_START = False  # if True an initial feasible solution, saved in the model.py file is used in the first time step
+USE_TERM_CONTROLLER = False  # if True local systems switch to their terminal controllers when locally in terminal set, even if other sub-systems are out of the terminal set
 N = 5
 n = 3
 nx_l = 2
@@ -58,8 +60,9 @@ G_map = g_map(Adj)
 system = get_local_system()
 systems = get_local_coupled_systems()
 
+
 class LocalMpc(MpcSwitching):
-    rho = 0.5   # ADMM penalty parameter
+    rho = 0.5  # ADMM penalty parameter
     horizon = N
 
     def __init__(self, num_neighbours, my_index, P) -> None:
@@ -158,6 +161,7 @@ class LocalMpc(MpcSwitching):
 
         self.init_solver(opts, solver=solver)
 
+
 # centralized controller used to get warm_start
 class Cent_MPC(MpcMld):
     Q_x = block_diag(*[Q_x_l] * n)
@@ -168,7 +172,7 @@ class Cent_MPC(MpcMld):
 
         obj = 0
 
-        # leave objective as zero to only search for a feasible solution 
+        # leave objective as zero to only search for a feasible solution
 
         # for k in range(N):
         #    obj += (
@@ -185,12 +189,17 @@ class Cent_MPC(MpcMld):
         # so that Gurobi only searches for a feasbile sol
         self.mpc_model.setParam("SolutionLimit", 1)
 
+
 class StableGAdmmCoordinator(GAdmmCoordinator):
     K = get_terminal_K()
-    term_flags = [False for i in range(n)]  # flags become True when sub-systems enter terminal sets
-    prev_x = [np.zeros((nx_l, N)) for i in range(n)]    # previous sol's state trajectory for constructing warm_starts
+    term_flags = [
+        False for i in range(n)
+    ]  # flags become True when sub-systems enter terminal sets
+    prev_x = [
+        np.zeros((nx_l, N)) for i in range(n)
+    ]  # previous sol's state trajectory for constructing warm_starts
     first_step = True
-    solve_times = []    # store solution times accounting for parallel computation
+    solve_times = []  # store solution times accounting for parallel computation
 
     def __init__(
         self,
@@ -240,7 +249,9 @@ class StableGAdmmCoordinator(GAdmmCoordinator):
         return super().on_timestep_end(env, episode, timestep)
 
     def g_admm_control(self, state, warm_start=None):
-        x = [state[self.nx_l * i : self.nx_l * (i + 1), :] for i in range(self.n)]  # break global state into local pieces
+        x = [
+            state[self.nx_l * i : self.nx_l * (i + 1), :] for i in range(self.n)
+        ]  # break global state into local pieces
 
         # set terminal flags
         for i in range(n):
@@ -249,7 +260,7 @@ class StableGAdmmCoordinator(GAdmmCoordinator):
                     self.term_flags[i] = True
 
                     if USE_TERM_CONTROLLER:
-                    # set linear control constraints
+                        # set linear control constraints
                         for k in range(N):
                             self.agents[i].V.constraint(
                                 f"term_cntrl_{k}",
@@ -338,6 +349,7 @@ class StableGAdmmCoordinator(GAdmmCoordinator):
 
         # run switching admm procedure with warm_start
         return super().g_admm_control(state, warm_start)
+
 
 # override PWA agent class to add in a terminal controller that switches with regions
 class PwaAgentTerminal(PwaAgent):

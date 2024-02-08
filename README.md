@@ -22,8 +22,8 @@ If you find the paper or this repository helpful in your publications, please co
 The code was created with `Python 3.9`. To access it, clone the repository
 
 ```bash
-git clone https://github.com/SamuelMallick/hybrid-vehicle-platoon
-cd hybrid-vehicle-platoon
+git clone https://github.com/SamuelMallick/stable-dmpc-pwa
+cd stable-dmpc-pwa
 ```
 
 and then install the required packages by, e.g., running
@@ -36,18 +36,23 @@ pip install -r requirements.txt
 
 The repository code is structured in the following way
 
-- **`ACC_env.py`** contains the environment for simulating the platoon. This updates the state of the platoon according to the nonlinear hybrid model, and generates the cost penalties for given states.
-- **`ACC_model.py`** contains all functions and data structures related to the modelling of the vehicles.
-- **`bash_scripts`** contains contains bash scripts for automated running of tests.
-- **`data`** contains '.pkl' files for data used in A Comparison Benchmark for Distributed Hybrid MPC Control Methods: Distributed Vehicle Platooning.
-- **`results_analysis`** contains scripts for generating the images and tables used in A Comparison Benchmark for Distributed Hybrid MPC Control Methods: Distributed Vehicle Platooning.
-- **`fleet_{cent_mld, decent_mld, seq_mld, event_based, naive_admm}.py`** launch simulations for the five controllers used in A Comparison Benchmark for Distributed Hybrid MPC Control Methods: Distributed Vehicle Platooning.
+- **`env.py`** contains the environment for simulating the system, i.e., stepping the dynamics and generating costs.
+- **`model.py`** contains all the relevant numerical definitions for the state space model of the system.
+- **`plotting.py`** contains functions for plotting the state trajectories of the system.
+- **`terminal_cost_calculations.py`** calculates appropriate terminal costs for the system via semi-definite programming.
+- **`generate_ICs.py`** generates the csv file ICS.csv.
+- **`ICs.csv`** contains the randomly generated initial conditions used in Distributed MPC for PWA Systems Based on Switching ADMM.
+- **`cent_MLD.py`** simulates the system under a centralized mixed logical dynamical MPC controller.
+- **`g_admm.py`** simulates the system under the distributed controller proposed in Distributed MPC for PWA Systems Based on Switching ADMM.
+- **`results`** contains scripts for generating the images in Distributed MPC for PWA Systems Based on Switching ADMM.
+- **`data`** contains data files for the results in Distributed MPC for PWA Systems Based on Switching ADMM.
+- **`MATLAB`** contains auxilarry Matlab scripts for the calculation of terminal sets for the system.
 
 ```
 
 ## License
 
-The repository is provided under the GNU General Public License. See the [LICENSE](https://github.com/SamuelMallick/hybrid-vehicle-platoon/blob/main/LICENSE) file included with this repository.
+The repository is provided under the GNU General Public License. See the [LICENSE](https://github.com/SamuelMallick/stable-dmpc-pwa/blob/main/LICENSE) file included with this repository.
 
 ---
 
@@ -61,4 +66,4 @@ The repository is provided under the GNU General Public License. See the [LICENS
 
 Copyright (c) 2023 Samuel Mallick.
 
-Copyright notice: Technische Universiteit Delft hereby disclaims all copyright interest in the program “hybrid-vehicle-platoon” (A Comparison Benchmark for Distributed Hybrid MPC Control Methods: Distributed Vehicle Platooning) written by the Author(s). Prof. Dr. Ir. Fred van Keulen, Dean of 3mE.
+Copyright notice: Technische Universiteit Delft hereby disclaims all copyright interest in the program “stable-dmpc-pwa” (Distributed MPC for PWA Systems Based on Switching ADMM) written by the Author(s). Prof. Dr. Ir. Fred van Keulen, Dean of 3mE.
