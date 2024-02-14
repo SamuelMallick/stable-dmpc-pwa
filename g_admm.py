@@ -1,8 +1,8 @@
 import logging
 import pickle
-from typing import Literal
 
 import casadi as cs
+from csnlp.wrappers import Mpc
 import gurobipy as gp
 import numpy as np
 import pandas as pd
@@ -182,7 +182,7 @@ class Cent_MPC(MpcMld):
         # obj += self.x[:, N] @ self.Q_x @ self.x[:, [N]]
 
         self.mpc_model.addConstrs(
-            A @ self.x[i : i + 2, [N]] <= b for i in range(0, 2 * n, 2)
+            A @ self.x[i * nx_l : (i + 1) * nx_l, [N]] <= b for i in range(n)
         )
         self.mpc_model.setObjective(obj, gp.GRB.MINIMIZE)
 
@@ -213,8 +213,6 @@ class StableGAdmmCoordinator(GAdmmCoordinator):
         admm_iters=50,
         switching_iters=float("inf"),
         agent_class=PwaAgent,
-        warmstart: Literal["last", "last-successful"] = "last-successful",
-        name: str = None,
     ) -> None:
         super().__init__(
             local_mpcs,
@@ -223,11 +221,9 @@ class StableGAdmmCoordinator(GAdmmCoordinator):
             G,
             Adj,
             rho,
-            admm_iters,
-            switching_iters,
-            agent_class,
-            warmstart,
-            name,
+            admm_iters=admm_iters,
+            switching_iters=switching_iters,
+            agent_class=agent_class,
         )
         self.cent_mpc = cent_mpc
         for i in range(n):
@@ -273,9 +269,7 @@ class StableGAdmmCoordinator(GAdmmCoordinator):
         if all(self.term_flags):
             action_list = []
             for i in range(n):
-                regions = self.agents[i].identify_regions(
-                    x[i], self.prev_sol[i][:, [-1]]
-                )
+                regions = self.agents[i].identify_regions(x[i])
                 action_list.append(self.K[regions[0]] @ x[i])
             return cs.DM(action_list), None, None, None
 
@@ -302,9 +296,7 @@ class StableGAdmmCoordinator(GAdmmCoordinator):
             prev_final_u = [self.prev_sol[i][:, [-1]] for i in range(n)]
             warm_start = []
             for i in range(n):
-                regions = self.agents[i].identify_regions(
-                    prev_final_x[i], prev_final_u[i]
-                )
+                regions = self.agents[i].identify_regions(prev_final_x[i])
                 warm_start.append(
                     np.hstack(
                         (self.prev_sol[i][:, 1:], self.K[regions[0]] @ prev_final_x[i])
@@ -321,9 +313,7 @@ class StableGAdmmCoordinator(GAdmmCoordinator):
                             self.nx_l * i : self.nx_l * (i + 1), [0]
                         ]  # add the first known states to the temp
                         if self.term_flags[i]:
-                            regions = self.agents[i].identify_regions(
-                                x_temp[i][:, [0]], self.prev_sol[i][:, [0]]
-                            )  # note here that the second argument does nothing
+                            regions = self.agents[i].identify_regions(x_temp[i][:, [0]])
                             warm_start[i][:, [0]] = (
                                 self.K[regions[0]] @ x_temp[i][:, [0]]
                             )
@@ -341,8 +331,8 @@ class StableGAdmmCoordinator(GAdmmCoordinator):
                             )
                             if self.term_flags[i]:
                                 regions = self.agents[i].identify_regions(
-                                    x_temp[i][:, [k]], self.prev_sol[i][:, [k]]
-                                )  # note here that the second argument does nothing
+                                    x_temp[i][:, [k]]
+                                )
                                 warm_start[i][:, [k]] = (
                                     self.K[regions[0]] @ x_temp[i][:, [k]]
                                 )
@@ -351,8 +341,18 @@ class StableGAdmmCoordinator(GAdmmCoordinator):
         return super().g_admm_control(state, warm_start)
 
 
-# override PWA agent class to add in a terminal controller that switches with regions
+# override PWA agent class to add in a terminal controller that switches with regions and uses final region in sequence
 class PwaAgentTerminal(PwaAgent):
+
+    def __init__(
+        self,
+        mpc: Mpc,
+        fixed_parameters: dict,
+        pwa_system: dict,
+        use_terminal_sequence: bool = False,
+    ) -> None:
+        super().__init__(mpc, fixed_parameters, pwa_system, use_terminal_sequence=True)
+
     K: list[np.ndarray] = []  # terminal controllers
 
     def set_K(self, K):
@@ -398,7 +398,7 @@ if CONTROL:
             local_mpcs[0].rho,
             cent_mpc,
             admm_iters=iters,
-            switching_iters=iters,
+            # switching_iters=int(iters/2),
             agent_class=PwaAgentTerminal,
         ),
         level=logging.DEBUG,
