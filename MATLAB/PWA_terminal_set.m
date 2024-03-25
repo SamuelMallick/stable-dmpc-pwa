@@ -56,7 +56,8 @@ X_iu_t.plot('color', 'gray');
 
 %% coupling sets
 X = Polyhedron('A', [1, 0; -1, 0; 0, 1; 0, -1], 'b', [20;20;20;20]);
-A_c = 1.75e-1*eye(2);
+A_c = 5e-2*eye(2);
+% A_c = 2e-3*eye(2);
 A_12 = 2*A_c;
 W = A_12*X;
 
@@ -96,11 +97,12 @@ max_eig
 
 figure(2)
 X_t = X_iu_t;
-for r=1:20
+for r=1:50
     r
     A = [];
     b = [];
     empty_flag = 0;
+    temp = minus(X_t, A_12*X_t)
     for i=1:L
         % Q = inv(Phi{i})*X_t;
         % Q = inv(Phi{i})*(minus(X_t, W));

@@ -44,7 +44,7 @@ The repository code is structured in the following way
 - **`ICs.csv`** contains the randomly generated initial conditions used in Distributed MPC for PWA Systems Based on Switching ADMM.
 - **`cent_MLD.py`** simulates the system under a centralized mixed logical dynamical MPC controller.
 - **`g_admm.py`** simulates the system under the distributed controller proposed in Distributed MPC for PWA Systems Based on Switching ADMM.
-- **`results`** contains scripts for generating the images in Distributed MPC for PWA Systems Based on Switching ADMM.
+- **`plt_traj/compare_trajs.py`** are scripts for generating the images in Distributed MPC for PWA Systems Based on Switching ADMM.
 - **`data`** contains data files for the results in Distributed MPC for PWA Systems Based on Switching ADMM.
 - **`MATLAB`** contains auxilarry Matlab scripts for the calculation of terminal sets for the system.
 

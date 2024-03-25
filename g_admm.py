@@ -62,7 +62,7 @@ systems = get_local_coupled_systems()
 
 
 class LocalMpc(MpcSwitching):
-    rho = 0.5  # ADMM penalty parameter
+    rho = 5  # ADMM penalty parameter
     horizon = N
 
     def __init__(self, num_neighbours, my_index, P) -> None:
@@ -116,7 +116,7 @@ class LocalMpc(MpcSwitching):
         self.u = u
         self.x = x
 
-        solver = "qrqp"
+        solver = "ipopt"
         if solver == "ipopt":
             opts = {
                 "expand": True,
@@ -213,6 +213,7 @@ class StableGAdmmCoordinator(GAdmmCoordinator):
         admm_iters=50,
         switching_iters=float("inf"),
         agent_class=PwaAgent,
+        debug_plot = False
     ) -> None:
         super().__init__(
             local_mpcs,
@@ -224,6 +225,7 @@ class StableGAdmmCoordinator(GAdmmCoordinator):
             admm_iters=admm_iters,
             switching_iters=switching_iters,
             agent_class=agent_class,
+            debug_plot=debug_plot
         )
         self.cent_mpc = cent_mpc
         for i in range(n):
@@ -386,7 +388,7 @@ for i in range(n):
     local_fixed_dist_parameters.append(local_mpcs[i].fixed_pars_init)
 
 # coordinator
-iters = 50
+iters = 75
 if CONTROL:
     agent = Log(
         StableGAdmmCoordinator(
@@ -398,8 +400,9 @@ if CONTROL:
             local_mpcs[0].rho,
             cent_mpc,
             admm_iters=iters,
-            # switching_iters=int(iters/2),
+            switching_iters=50,
             agent_class=PwaAgentTerminal,
+            debug_plot=True
         ),
         level=logging.DEBUG,
         log_frequencies={"on_timestep_end": 1},

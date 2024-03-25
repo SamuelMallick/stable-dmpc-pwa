@@ -1,12 +1,12 @@
 import numpy as np
 from dmpcpwa.utils.pwa_models import cent_from_dist
 
-HIGH_COUPLING = False
+HIGH_COUPLING = True
 
 
 # hard coded IC's
 def get_IC():
-    return np.array([[-11, -18, 2, -19, 15, 19]]).T
+    # return np.array([[-11, -18, 2, -19, 15, 19]]).T
     # return np.array([[-17,-18,18,-19,-18,19]]).T
     # return np.array([[17, 18, 18, 15, -18, 15]]).T
     # return np.array([[0, 19, 19, 0, -19, 0]]).T
@@ -15,7 +15,7 @@ def get_IC():
     # return np.array([[18, 10, -10, -18, 10, -18]]).T
     # return np.array([[-17, -18, 19, 0, 18, -15]]).T
     # return np.array([[0, -19, 18, -19, 10, -18]]).T
-    # return np.array([[-18, 15, 19, 0, 10, 18]]).T # this one for unstable
+    return np.array([[-18, 15, 19, 0, 10, 18]]).T 
     # return np.array([[-12, -16, 4, -15, 14, 16]]).T
 
 
@@ -94,7 +94,7 @@ def get_local_system():
 # coupling description
 Adj = np.array([[0, 1, 0], [1, 0, 1], [1, 0, 0]])
 if HIGH_COUPLING:
-    A_c = 1.75e-1 * np.eye(2)
+    A_c = 1.6e-1 * np.eye(2)
 else:
     A_c = 2e-3 * np.eye(2)
 
@@ -156,41 +156,21 @@ def get_terminal_K():
     return K
 
 
-# invariant sets
-if HIGH_COUPLING:
-    # vertice description
-    def get_inv_set_vertices():
-        return np.array(
-            [[1.8229, -4.0840], [4.1585, -1.6456], [-1.8229, 4.0840], [-4.1585, 1.6456]]
-        )
-
-    # inequality description
-    A_t = np.array(
-        [[8.1957, -7.8503], [-8.1957, 7.8503], [0.0035, 0.0036], [-0.0035, -0.0036]]
+# invariant set
+def get_inv_set_vertices():
+    return np.array(
+        [
+            [5.8850, 0.1257],
+            [-0.1265, 5.8549],
+            [-5.8550, -0.1257],
+            [0.1265, -5.8549],
+            [5.8850, 0.1257],
+        ]
     )
-    b_t = np.array([[47, 47, 0.0085, 0.0085]]).T
-else:
-
-    def get_inv_set_vertices():
-        return np.array(
-            [
-                [-5.7352, 0.3567],
-                [3.4420, -5.5259],
-                [3.4420, -5.5259],
-                [3.7696, -4.7875],
-                [5.7352, -0.3567],
-                [-3.4420, 5.5259],
-                [-3.5319, 5.3232],
-                [-4.1510, 3.9276],
-                [-5.7352, 0.3567],
-            ]
-        )
-
-    A_t = np.array(
-        [[0.1668, -0.0740], [0.1818, 0.2836], [-0.1668, 0.0740], [-0.1818, -0.2836]]
-    )
-    b_t = np.array([[0.9832, 0.9415, 0.9832, 0.9415]]).T
-
+g = 47
+P = np.array([[7.8514, 8.1971], [8.1957, -7.8503]])
+A_t = np.vstack([P, -P])
+b_t = g*np.ones((4, 1))
 
 def get_inv_set():
     return A_t, b_t
@@ -203,9 +183,9 @@ def get_warm_start():
 # terminal costs
 if HIGH_COUPLING:
     P = [
-        np.array([[61.36754071, 44.26150445], [44.26150445, 66.20094451]]),
-        np.array([[45.12352268, 31.04509244], [31.04509244, 51.9659067]]),
-        np.array([[48.60951393, 32.84999294], [32.84999294, 52.68655713]]),
+        np.array([[40.98181315, 28.2907376], [28.2907376, 43.73493886]]),
+        np.array([[32.07159554, 20.89652306], [20.89652306, 35.91201348]]),
+        np.array([[31.96518077, 20.83443871], [20.83443871, 35.06598081]]),
     ]
 else:
     P = [

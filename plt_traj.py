@@ -4,13 +4,14 @@ import matplotlib.pyplot as plt
 import numpy as np
 from dmpcpwa.utils.tikz import save2tikz
 from matplotlib.patches import Polygon
+from model import get_inv_set_vertices
 
 plt.rc("text", usetex=True)
 plt.rc("font", size=14)
 plt.style.use("bmh")
 
 with open(
-    f"examples/small_stable/data/gadmm_unstab.pkl",
+    f"data/gadmm_unstab.pkl",
     "rb",
 ) as file:
     X = pickle.load(file)
@@ -41,9 +42,7 @@ x = np.linspace(-20, 0, 100)
 axs.fill_between(x, -x, x, color="gray", alpha=0.3, label="_nolegend_")
 
 # terminal set
-X0 = np.array(
-    [[1.8229, -4.0840], [4.1585, -1.6456], [-1.8229, 4.0840], [-4.1585, 1.6456]]
-)
+X0 = get_inv_set_vertices()
 p = Polygon(X0, facecolor="r", alpha=0.3, label="_nolegend_")
 axs.add_patch(p)
 

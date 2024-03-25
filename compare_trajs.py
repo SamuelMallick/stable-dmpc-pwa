@@ -4,12 +4,14 @@ import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.patches import Polygon
 from scipy.io import loadmat
+from model import get_inv_set_vertices
+from dmpcpwa.utils.tikz import save2tikz
 
 plt.rc("text", usetex=True)
 plt.rc("font", size=14)
 plt.style.use("bmh")
 
-data = loadmat("examples/small_stable/data/data.mat")
+data = loadmat("data/data.mat")
 data = data["data"][0]
 
 num_ICs = 100
@@ -36,7 +38,7 @@ for i in range(num_ICs):
 
 for i in range(num_ICs):
     with open(
-        f"examples/small_stable/data/gadmm_{i+1}.pkl",
+        f"data/gadmm_{i+1}.pkl",
         "rb",
     ) as file:
         X_our.append(pickle.load(file))
@@ -176,19 +178,7 @@ x = np.linspace(-20, 0, 100)
 axs.fill_between(x, -x, x, color="gray", alpha=0.3, label="_nolegend_")
 
 # terminal set
-X0 = np.array(
-    [
-        [-5.7352, 0.3567],
-        [3.4420, -5.5259],
-        [3.4420, -5.5259],
-        [3.7696, -4.7875],
-        [5.7352, -0.3567],
-        [-3.4420, 5.5259],
-        [-3.5319, 5.3232],
-        [-4.1510, 3.9276],
-        [-5.7352, 0.3567],
-    ]
-)
+X0 = get_inv_set_vertices()
 p = Polygon(X0, facecolor="r", alpha=0.3, label="_nolegend_")
 axs.add_patch(p)
 

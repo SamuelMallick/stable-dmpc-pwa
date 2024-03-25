@@ -50,11 +50,11 @@ for comb in combs:
     # build global closed loop A matrix
     A_g_l = [
         [
-            systems[i]["A"][comb[i]] + systems[i]["B"][comb[i]] @ K_term[comb[i]]
-            if j == i
-            else A_c
-            if Adj[i, j] == 1
-            else np.zeros((n, n))
+            (
+                systems[i]["A"][comb[i]] + systems[i]["B"][comb[i]] @ K_term[comb[i]]
+                if j == i
+                else A_c if Adj[i, j] == 1 else np.zeros((n, n))
+            )
             for j in range(M)
         ]
         for i in range(M)
