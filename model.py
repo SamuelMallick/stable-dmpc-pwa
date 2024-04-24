@@ -1,7 +1,7 @@
 import numpy as np
 from dmpcpwa.utils.pwa_models import cent_from_dist
 
-HIGH_COUPLING = True
+HIGH_COUPLING = False
 
 
 # hard coded IC's

@@ -49,11 +49,12 @@ class Network(gym.Env[npt.NDArray[np.floating], npt.NDArray[np.floating]]):
         return state.T @ self.Q_x @ state + action.T @ self.Q_u @ action
 
     def step(
-        self, action: cs.DM
+        self, action: cs.DM | np.ndarray
     ) -> tuple[npt.NDArray[np.floating], float, bool, bool, dict[str, Any]]:
         """Steps the system."""
 
-        action = action.full()
+        if isinstance(action, cs.DM):
+            action = action.full()
         r = self.get_stage_cost(self.x, action)
 
         x_new = None

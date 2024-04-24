@@ -62,7 +62,7 @@ systems = get_local_coupled_systems()
 
 
 class LocalMpc(MpcSwitching):
-    rho = 5  # ADMM penalty parameter
+    rho = 0.5  # ADMM penalty parameter
     horizon = N
 
     def __init__(self, num_neighbours, my_index, P) -> None:
@@ -106,7 +106,8 @@ class LocalMpc(MpcSwitching):
                 x[:, k].T @ Q_x_l @ x[:, k] + u[:, k].T @ Q_u_l @ u[:, k]
                 for k in range(N)
             )
-            + x[:, N].T @ P @ x[:, N]
+            + x[:, N].T @ P @ x[:, N],
+            rho = self.rho
         )
 
         # parameters to add constraints enforcing terminal switching controllers
@@ -388,7 +389,7 @@ for i in range(n):
     local_fixed_dist_parameters.append(local_mpcs[i].fixed_pars_init)
 
 # coordinator
-iters = 75
+iters = 50
 if CONTROL:
     agent = Log(
         StableGAdmmCoordinator(
@@ -402,7 +403,7 @@ if CONTROL:
             admm_iters=iters,
             switching_iters=50,
             agent_class=PwaAgentTerminal,
-            debug_plot=True
+            debug_plot=False
         ),
         level=logging.DEBUG,
         log_frequencies={"on_timestep_end": 1},
