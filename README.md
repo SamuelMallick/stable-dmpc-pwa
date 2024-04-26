@@ -4,7 +4,7 @@
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 
-This repository contains the source code used to produce the results obtained in [Distributed MPC for PWA Systems Based on Switching ADMM](PUT LINK) submitted to [PUT JOURNAL](PUT JOURNAL LINK).
+This repository contains the source code used to produce the results obtained in example 1 of [Distributed MPC for PWA Systems Based on Switching ADMM](https://arxiv.org/abs/2404.16712) submitted to [IEEE Transactions on Automatic Control](https://ieeexplore.ieee.org/xpl/RecentIssue.jsp?punumber=9).
 
 In this work, we propose a novel approach for distributed MPC for PWA systems. The approach is based on a switching ADMM procedure that is developed to solve the globally formulated non-convex MPC optimal control problem distributively.
 
@@ -12,6 +12,12 @@ If you find the paper or this repository helpful in your publications, please co
 
 ```bibtex
 @article{
+    mallick2024distributed,
+    title={Distributed MPC for PWA Systems Based on Switching ADMM}, 
+    author={Samuel Mallick and Azita Dabiri and Bart De Schutter},
+    year={2024},
+    eprint={2404.16712},
+    archivePrefix={arXiv}
 }
 ```
 
@@ -19,7 +25,7 @@ If you find the paper or this repository helpful in your publications, please co
 
 ## Installation
 
-The code was created with `Python 3.9`. To access it, clone the repository
+The code was created with `Python 3.11`. To access it, clone the repository
 
 ```bash
 git clone https://github.com/SamuelMallick/stable-dmpc-pwa
