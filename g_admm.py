@@ -106,8 +106,7 @@ class LocalMpc(MpcSwitching):
                 x[:, k].T @ Q_x_l @ x[:, k] + u[:, k].T @ Q_u_l @ u[:, k]
                 for k in range(N)
             )
-            + x[:, N].T @ P @ x[:, N],
-            rho = self.rho
+            + x[:, N].T @ P @ x[:, N]
         )
 
         # parameters to add constraints enforcing terminal switching controllers
