@@ -1,21 +1,16 @@
 import gurobipy as gp
-import numpy as np
-from dmpcpwa.agents.mld_agent import MldAgent
 from dmpcpwa.mpc.mpc_mld import MpcMld
-from gymnasium.wrappers import TimeLimit
-from mpcrl.wrappers.envs import MonitorEpisodes
 from scipy.linalg import block_diag
 
-from system.env import Network
 from system.model import Model
-from utils.plotting import plot_system
+
 
 class CentralizedMPC(MpcMld):
     """A centralized MPC controller that solved for the control input with a mixed-integer program."""
 
     def __init__(self, model: Model, N: int) -> None:
         """Initialize the centralized MPC controller.
-        
+
         Parameters
         ----------
         model : Model

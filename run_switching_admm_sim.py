@@ -2,11 +2,11 @@ import logging
 import pickle
 
 import casadi as cs
-from csnlp.wrappers import Mpc
 import gurobipy as gp
 import numpy as np
 import pandas as pd
 from csnlp import Nlp
+from csnlp.wrappers import Mpc
 from dmpcpwa.agents.g_admm_coordinator import GAdmmCoordinator, PwaAgent
 from dmpcpwa.agents.no_control_agent import NoControlAgent
 from dmpcpwa.mpc.mpc_mld import MpcMld
@@ -213,7 +213,7 @@ class StableGAdmmCoordinator(GAdmmCoordinator):
         admm_iters=50,
         switching_iters=float("inf"),
         agent_class=PwaAgent,
-        debug_plot = False
+        debug_plot=False,
     ) -> None:
         super().__init__(
             local_mpcs,
@@ -225,7 +225,7 @@ class StableGAdmmCoordinator(GAdmmCoordinator):
             admm_iters=admm_iters,
             switching_iters=switching_iters,
             agent_class=agent_class,
-            debug_plot=debug_plot
+            debug_plot=debug_plot,
         )
         self.cent_mpc = cent_mpc
         for i in range(n):
@@ -402,7 +402,7 @@ if CONTROL:
             admm_iters=iters,
             switching_iters=50,
             agent_class=PwaAgentTerminal,
-            debug_plot=True
+            debug_plot=True,
         ),
         level=logging.DEBUG,
         log_frequencies={"on_timestep_end": 1},

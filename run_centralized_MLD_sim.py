@@ -1,17 +1,14 @@
-import gurobipy as gp
 import numpy as np
 from dmpcpwa.agents.mld_agent import MldAgent
-from dmpcpwa.mpc.mpc_mld import MpcMld
 from gymnasium.wrappers import TimeLimit
 from mpcrl.wrappers.envs import MonitorEpisodes
-from scipy.linalg import block_diag
 
+from mpcs.cent_mpc import CentralizedMPC
 from system.env import Network
 from system.model import Model
 from utils.plotting import plot_system
-from mpcs.cent_mpc import CentralizedMPC
 
-N = 5   # horizon
+N = 5  # horizon
 ep_len = 30
 model = Model(strong_coupling=False)
 

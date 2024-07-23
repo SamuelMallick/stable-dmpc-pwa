@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
+
 def plot_system(X: np.ndarray, U: np.ndarray) -> None:
     for i in range(3):
         plt.plot(X[0, 2 * i], X[0, 2 * i + 1], "o", color=f"C{i}")

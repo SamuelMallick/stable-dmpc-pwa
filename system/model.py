@@ -1,8 +1,10 @@
 import numpy as np
 from dmpcpwa.utils.pwa_models import cent_from_dist
 
+
 class Model:
     """State model class for the multi-agent system."""
+
     @property
     def n(self) -> int:
         """Returns the number of subsystems."""
@@ -12,7 +14,7 @@ class Model:
     def terminal_controllers(self) -> list[np.ndarray]:
         """Returns the terminal controllers."""
         return self.K
-    
+
     @property
     def terminal_costs(self) -> list[np.ndarray]:
         """Returns the terminal cost matrix."""
@@ -67,14 +69,14 @@ class Model:
 
     # cost matrices for local systems
     Q_x = np.array([[2, 0], [0, 2]])
-    Q_u = 0.2 * np.array([[1]]) 
+    Q_u = 0.2 * np.array([[1]])
 
     # coupling description
     adj = np.array([[0, 1, 0], [1, 0, 1], [1, 0, 0]])
 
     ICs = [
         np.array([[-11, -18, 2, -19, 15, 19]]).T,
-        np.array([[-17,-18,18,-19,-18,19]]).T,
+        np.array([[-17, -18, 18, -19, -18, 19]]).T,
         np.array([[17, 18, 18, 15, -18, 15]]).T,
         np.array([[0, 19, 19, 0, -19, 0]]).T,
         np.array([[0, -19, -18, -15, 18, -15]]).T,
@@ -83,7 +85,7 @@ class Model:
         np.array([[-17, -18, 19, 0, 18, -15]]).T,
         np.array([[0, -19, 18, -19, 10, -18]]).T,
         np.array([[-18, 15, 19, 0, 10, 18]]).T,
-        np.array([[-12, -16, 4, -15, 14, 16]]).T
+        np.array([[-12, -16, 4, -15, 14, 16]]).T,
     ]
 
     # terminal controllers
@@ -98,15 +100,15 @@ class Model:
     g = 47
     v = np.array([[7.8514, 8.1971], [8.1957, -7.8503]])
     A_t = np.vstack([v, -v])
-    b_t = g*np.ones((4, 1))
+    b_t = g * np.ones((4, 1))
 
     def __init__(self, strong_coupling: bool = False) -> None:
         """Initialize the model.
-        
+
         Parameters
         ----------
         strong_coupling : bool, optional
-            If true, the inter-agent coupling is 1.6e-1 I, otherwise it is 2e-3 I."""        
+            If true, the inter-agent coupling is 1.6e-1 I, otherwise it is 2e-3 I."""
         if strong_coupling:
             self.A_c = 1.6e-1 * np.eye(2)
             self.P = [
@@ -124,23 +126,26 @@ class Model:
 
     def get_IC(self, idx: int = 0) -> np.ndarray:
         """Returns one of the predefined the initial conditions.
-        
+
         Parameters
         ----------
         idx : int, optional
-            The index of the initial condition to return. If not provided, the first one is returned."""
+            The index of the initial condition to return. If not provided, the first one is returned.
+        """
         if idx >= len(self.ICs):
-            raise ValueError(f"Index {idx} is out of bounds for the {len(self.ICs)} initial conditions.")
+            raise ValueError(
+                f"Index {idx} is out of bounds for the {len(self.ICs)} initial conditions."
+            )
         return self.ICs[idx]
-    
+
     def get_cost_matrices(self) -> tuple[np.ndarray, np.ndarray]:
         """Returns the cost matrices Q_x and Q_u."""
         return self.Q_x, self.Q_u
-    
+
     def get_local_system(self) -> dict:
-        """Returns the local system dynamics as a PWA dictionary {S, R, T, A, B, c, D, E, F, G}. 
+        """Returns the local system dynamics as a PWA dictionary {S, R, T, A, B, c, D, E, F, G}.
         No coupling is included in the dynamics description.
-        
+
         Returns
         -------
         dict
@@ -157,11 +162,11 @@ class Model:
             "F": self.F,
             "G": self.G,
         }
-    
+
     def get_local_coupled_systems(self) -> list[dict]:
         """Returns the local system dynamics as PWA dictionaries {S, R, T, A, B, c, D, E, F, G}.
         The coupling is incluyded in the dynamics description.
-        
+
         Returns
         -------
         list[dict]
@@ -187,7 +192,7 @@ class Model:
             systems[2]["Ac"] = systems[2]["Ac"] + [Ac_i]
 
         return systems
-    
+
     def get_cent_system(self) -> dict:
         """Returns the centralized system dynamics as a PWA dictionary {S, R, T, A, B, c, D, E, F, G}."""
         sys_1 = self.get_local_system()
@@ -197,10 +202,10 @@ class Model:
         sys_3 = self.get_local_system()
         sys_3["Ac"] = [[self.A_c] for _ in range(4)]
         return cent_from_dist([sys_1, sys_2, sys_3], self.adj)
-    
+
     def get_inv_set(self) -> tuple[np.ndarray, np.ndarray]:
         """Returns the invariant set A x <= b as (A, b).
-        
+
         Returns
         -------
         tuple[np.ndarray, np.ndarray]
@@ -222,16 +227,13 @@ class Model:
 #     # return np.array([[18, 10, -10, -18, 10, -18]]).T
 #     # return np.array([[-17, -18, 19, 0, 18, -15]]).T
 #     # return np.array([[0, -19, 18, -19, 10, -18]]).T
-#     return np.array([[-18, 15, 19, 0, 10, 18]]).T 
+#     return np.array([[-18, 15, 19, 0, 10, 18]]).T
 #     # return np.array([[-12, -16, 4, -15, 14, 16]]).T
 
 
 # # cost matrices
 # Q_x = np.array([[2, 0], [0, 2]])
 # Q_u = 0.2 * np.array([[1]])
-
-
-
 
 
 # # PWA dynamics

@@ -14,7 +14,7 @@ class Network(gym.Env[npt.NDArray[np.floating], npt.NDArray[np.floating]]):
 
     def __init__(self, model: Model) -> None:
         """Initialize the network of PWA systems.
-        
+
         Parameters
         ----------
         model : Model
@@ -31,7 +31,7 @@ class Network(gym.Env[npt.NDArray[np.floating], npt.NDArray[np.floating]]):
 
     def set_IC(self, IC: np.ndarray) -> None:
         """Set the initial condition of the system.
-        
+
         Parameters
         ----------
         IC : np.ndarray
@@ -53,22 +53,21 @@ class Network(gym.Env[npt.NDArray[np.floating], npt.NDArray[np.floating]]):
             self.x = self.x0
         return self.x, {}
 
-    def get_stage_cost(
-        self, state: np.ndarray, action: np.ndarray
-    ) -> float:
+    def get_stage_cost(self, state: np.ndarray, action: np.ndarray) -> float:
         """Computes the stage cost.
-        
+
         Parameters
         ----------
         state : np.ndarray
             The state of the system.
         action : np.ndarray
             The action of the system.
-        
+
         Returns
         -------
         float
-            The stage cost, a quadratic function of the state and action (x^T Q_x x + u^T Q_u u)."""
+            The stage cost, a quadratic function of the state and action (x^T Q_x x + u^T Q_u u).
+        """
         return state.T @ self.Q_x @ state + action.T @ self.Q_u @ action
 
     def step(
@@ -80,7 +79,7 @@ class Network(gym.Env[npt.NDArray[np.floating], npt.NDArray[np.floating]]):
         r = self.get_stage_cost(self.x, action)
 
         x_new = None
-        for i in range(len(self.sys["S"])): # TODO: get rid of loop
+        for i in range(len(self.sys["S"])):  # TODO: get rid of loop
             if all(
                 self.sys["S"][i] @ self.x + self.sys["R"][i] @ action
                 <= self.sys["T"][i]
@@ -97,15 +96,14 @@ class Network(gym.Env[npt.NDArray[np.floating], npt.NDArray[np.floating]]):
         self.x = x_new
         return x_new, r, False, False, {}
 
-
     def random_vector_with_infinity_norm(self, max_norm) -> np.ndarray:
         """Generate a random vector with inf norm less than max_norm.
-        
+
         Parameters
         ----------
         max_norm : float
             The maximum norm of the vector.
-        
+
         Returns
         -------
         np.ndarray
