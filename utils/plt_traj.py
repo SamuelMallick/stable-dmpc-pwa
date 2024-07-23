@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from dmpcpwa.utils.tikz import save2tikz
 from matplotlib.patches import Polygon
-from model import get_inv_set_vertices
+from system.model import get_inv_set_vertices
 
 plt.rc("text", usetex=True)
 plt.rc("font", size=14)

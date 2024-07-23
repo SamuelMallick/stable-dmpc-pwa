@@ -6,9 +6,9 @@ from gymnasium.wrappers import TimeLimit
 from mpcrl.wrappers.envs import MonitorEpisodes
 from scipy.linalg import block_diag
 
-from env import Network
-from model import get_cent_system, get_cost_matrices, get_inv_set, get_terminal_costs
-from plotting import plot_system
+from system.env import Network
+from system.model import get_cent_system, get_cost_matrices, get_inv_set, get_terminal_costs
+from utils.plotting import plot_system
 
 N = 5
 n = 3  # num sub-systems

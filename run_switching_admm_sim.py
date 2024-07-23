@@ -19,8 +19,8 @@ from mpcrl.wrappers.agents import Log
 from mpcrl.wrappers.envs import MonitorEpisodes
 from scipy.linalg import block_diag
 
-from env import Network
-from model import (
+from system.env import Network
+from system.model import (
     get_adj,
     get_cent_system,
     get_cost_matrices,
@@ -31,7 +31,7 @@ from model import (
     get_terminal_K,
     get_warm_start,
 )
-from plotting import plot_system
+from utils.plotting import plot_system
 
 PLOT = True
 SAVE = False

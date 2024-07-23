@@ -4,7 +4,7 @@ import cvxpy as cp
 import numpy as np
 from scipy.linalg import block_diag
 
-from model import (
+from system.model import (
     get_A_c,
     get_adj,
     get_cost_matrices,

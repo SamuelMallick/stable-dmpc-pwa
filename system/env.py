@@ -6,7 +6,7 @@ import numpy as np
 import numpy.typing as npt
 from scipy.linalg import block_diag
 
-from model import get_cent_system, get_cost_matrices, get_IC
+from system.model import get_cent_system, get_cost_matrices, get_IC
 
 np.random.seed(1)
 
