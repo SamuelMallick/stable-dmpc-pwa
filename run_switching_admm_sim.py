@@ -22,7 +22,7 @@ SAVE = False
 STRONG_COUPLING = False
 
 CONTROL = True  # if False the open loop uncontrolled system runs
-MULTIPLE_ICS = False  # if True the simulation is run for all ICs in the ICs.csv file
+MULTIPLE_ICS = True  # if True the simulation is run for all ICs in the ICs.csv file
 
 N = 5
 n = 3
@@ -95,7 +95,7 @@ else:
     agent = NoControlAgent(3, local_mpcs[0])
 
 if MULTIPLE_ICS:
-    df = pd.read_csv("ICs.csv", header=None)
+    df = pd.read_csv("utils/ICs.csv", header=None)
     X0s = df.values
     for i in range(X0s.shape[0]):
         env.set_IC(X0s[[i], :].T)
@@ -138,7 +138,7 @@ else:
     print(f"cost = {sum(R)}")
     plot_system(X, U)
 
-    id = "unstab"
+    id = "unstab" if STRONG_COUPLING else "stab"
     if SAVE:
         with open(
             f"gadmm_{id}" + ".pkl",
