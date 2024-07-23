@@ -31,9 +31,9 @@ agent = MldAgent(mpc)
 agent.evaluate(env=env, episodes=1, seed=1)
 
 # get data from env
-X = np.squeeze(env.ep_observations)
-U = np.squeeze(env.ep_actions)
-R = np.squeeze(env.ep_rewards)
+X = np.squeeze(env.observations)
+U = np.squeeze(env.actions)
+R = np.squeeze(env.rewards)
 
 print(f"cost = {sum(R)}")
 plot_system(X, U)
