@@ -19,7 +19,7 @@ class LocalMpc(MpcSwitching):
         P: np.ndarray,
         X_t: tuple[np.ndarray, np.ndarray] | None = None,
         rho: float = 0.5,
-        solver: Literal["ipopt", "qrqp", "qpoases"] = "ipopt",
+        solver: Literal["ipopt", "qrqp", "qpoases", "gurobi"] = "ipopt",
     ) -> None:
         """Initialize the local MPC scheme.
 
@@ -140,6 +140,25 @@ class LocalMpc(MpcSwitching):
                 "record_time": True,
                 "error_on_fail": True,
                 "printLevel": "none",
+                "jit": True,
+            }
+        elif solver == "osqp":
+            opts = {
+                "print_time": False,
+                "record_time": True,
+                "error_on_fail": True,
+                "printLevel": "none",
+            }
+        elif solver == "gurobi":
+            opts = {
+                "print_time": False,
+                "record_time": True,
+                "error_on_fail": True,
+                "gurobi": {
+                    "OutputFlag": 0,
+                    "LogToConsole": 0,
+                    # "BarConvTol": 1e-3,
+                }
             }
         else:
             raise RuntimeError("No solver type defined.")
