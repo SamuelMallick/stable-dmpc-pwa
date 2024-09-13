@@ -1,6 +1,7 @@
 import pickle
-import numpy as np
+
 import matplotlib.pyplot as plt
+import numpy as np
 
 with open("random_systems/costs_hard.pkl", "rb") as f:
     costs = pickle.load(f)

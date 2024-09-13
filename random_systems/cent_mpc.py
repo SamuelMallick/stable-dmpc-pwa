@@ -1,7 +1,6 @@
 import gurobipy as gp
-from dmpcpwa.mpc.mpc_mld import MpcMld
-from scipy.linalg import block_diag
 import numpy as np
+from dmpcpwa.mpc.mpc_mld import MpcMld
 
 
 class CentralizedMPC(MpcMld):

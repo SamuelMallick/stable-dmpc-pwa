@@ -1,11 +1,10 @@
+import os
 import pickle
 import sys
-import os
+
 import matplotlib.pyplot as plt
 import numpy as np
-from matplotlib.patches import Polygon
 from scipy.io import loadmat
-from dmpcpwa.utils.tikz import save2tikz
 
 sys.path.append(os.getcwd())
 from system.model import Model
@@ -95,20 +94,15 @@ axs.bar(
 axs.set_ylabel(r"$J/J_{MLD}$")
 
 _, axs = plt.subplots(1, 1, constrained_layout=True, sharex=True)
-time_data = (
-    [
-        np.concatenate(data_swa[name_swa]["T"])[
-            np.concatenate(data_swa[name_swa]["T"]) != 0
-        ]
-        for name_swa in data_swa.keys()
+time_data = [
+    np.concatenate(data_swa[name_swa]["T"])[
+        np.concatenate(data_swa[name_swa]["T"]) != 0
     ]
-    + [
-        np.concatenate(data_rc[name_rc]["T"])[
-            np.concatenate(data_rc[name_rc]["T"]) != 0
-        ]
-        for name_rc in data_rc.keys()
-    ]
-)
+    for name_swa in data_swa.keys()
+] + [
+    np.concatenate(data_rc[name_rc]["T"])[np.concatenate(data_rc[name_rc]["T"]) != 0]
+    for name_rc in data_rc.keys()
+]
 axs.boxplot(time_data)
 axs.set_yscale("log")
 
