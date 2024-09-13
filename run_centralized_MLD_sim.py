@@ -32,23 +32,19 @@ env = MonitorEpisodes(
     )
 )
 
+
 # agent
 class TimedMldAgent(MldAgent):
     def reset(self, seed=None) -> None:
         self.solve_times: list[float] = []
         return super().reset(seed)
-    
+
     def on_timestep_end(self, env: Env, episode: int, timestep: int) -> None:
         self.solve_times.append(self.run_time)
         return super().on_timestep_end(env, episode, timestep)
-    
-agent = TimedMldAgent(mpc)
-agent.evaluate(env=env, episodes=1, seed=1)
 
-# get data from env
-X = np.squeeze(env.observations)
-U = np.squeeze(env.actions)
-R = np.squeeze(env.rewards)
+
+agent = TimedMldAgent(mpc)
 
 if MULTIPLE_ICS:
     df = pd.read_csv("utils/ICs.csv", header=None)
@@ -104,4 +100,3 @@ else:
             pickle.dump(U, file)
             pickle.dump(R, file)
             pickle.dump(agent.solve_times, file)
-
