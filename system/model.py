@@ -217,5 +217,17 @@ class Model:
             The invariant set A x <= b."""
         return self.A_t, self.b_t
 
+    def get_inv_set_vertices(self) -> np.ndarray:
+        """Returns the vertices of the invariant set."""
+        return np.array(
+            [
+                [5.8850, 0.1257],
+                [-0.1265, 5.8549],
+                [-5.8550, -0.1257],
+                [0.1265, -5.8549],
+                [5.8850, 0.1257],
+            ]
+        )
+
     def get_warm_start(self, N: int) -> np.ndarray:
         raise RuntimeError("get_warm_start not implemented for model")

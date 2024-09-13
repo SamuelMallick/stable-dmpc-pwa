@@ -16,8 +16,8 @@ from system.env import Network
 from system.model import Model
 from utils.plotting import plot_system
 
-PLOT = True
-SAVE = False
+PLOT = False
+SAVE = True
 
 STRONG_COUPLING = False
 
@@ -65,7 +65,7 @@ for i in range(n):
             P=P[i],
             X_t=X_t,
             rho=rho,
-            solver="qrqp",
+            solver="osqp",
         )
     )
     local_fixed_dist_parameters.append(local_mpcs[i].fixed_pars_init)
@@ -111,6 +111,9 @@ if MULTIPLE_ICS:
             R = np.squeeze(env.ep_rewards)
 
         print(f"cost = {sum(R)}")
+        print(
+            f"av solve time = {sum([t for t in agent.solve_times if t != 0])/len([t for t in agent.solve_times if t != 0])}"
+        )
         if PLOT:
             plot_system(X, U)
 
@@ -136,6 +139,10 @@ else:
         R = np.squeeze(env.ep_rewards)
 
     print(f"cost = {sum(R)}")
+    print(
+        f"av solve time = {sum([t for t in agent.solve_times if t != 0])/len([t for t in agent.solve_times if t != 0])}"
+    )
+    # print(f"av solve time = {np.mean(agent.solve_times)}")
     plot_system(X, U)
 
     id = "unstab" if STRONG_COUPLING else "stab"
