@@ -5,6 +5,7 @@ import sys
 import matplotlib.pyplot as plt
 import numpy as np
 from scipy.io import loadmat
+from dmpcpwa.utils.tikz import save2tikz
 
 sys.path.append(os.getcwd())
 from system.model import Model
@@ -37,7 +38,7 @@ for name in names:
         data_rc[name]["J"].append(data[i]["J"][0, 0].item())
 
 # get data from pickles for swa approach
-names = ["gurobi", "ipopt", "osqp", "qpoases", "qrqp"]
+names = ["gurobi", "osqp", "qpoases", "qrqp"]
 for name in names:
     data_swa[name] = {"X": [], "U": [], "T": [], "J": []}
     for i in range(num_ICs):
@@ -92,19 +93,46 @@ axs.bar(
     color="C2",
 )
 axs.set_ylabel(r"$J/J_{MLD}$")
+axs.legend(["RC-Sets", "Sw-ADMM"], loc="upper left", ncol=2)
+# save2tikz(plt.gcf())
 
 _, axs = plt.subplots(1, 1, constrained_layout=True, sharex=True)
-time_data = [
+axs.boxplot([np.array([
+        data_swa[name_rc]["J"][i] / data_cent[name_cent]["J"][i] - 1
+        for i in range(num_ICs)
+    ]),
+    np.array([data_rc[name_rc]["J"][i] / data_cent[name_cent]["J"][i] - 1
+        for i in range(num_ICs)])]
+    )
+
+
+_, axs = plt.subplots(1, 2, constrained_layout=True, sharey=True)
+time_data_sw_admm = [
     np.concatenate(data_swa[name_swa]["T"])[
         np.concatenate(data_swa[name_swa]["T"]) != 0
     ]
     for name_swa in data_swa.keys()
-] + [
+] 
+axs[0].boxplot(time_data_sw_admm, labels=['gurobi', 'osqp', 'qpoases', 'qrqp'])
+time_data_rc_sets = [
     np.concatenate(data_rc[name_rc]["T"])[np.concatenate(data_rc[name_rc]["T"]) != 0]
     for name_rc in data_rc.keys()
 ]
-axs.boxplot(time_data)
-axs.set_yscale("log")
+axs[1].boxplot(time_data_rc_sets, labels=['cplex', 'mosek', 'gurobi'])
+#+ [
+#     np.concatenate(data_cent[name_cent]["T"])[
+#         np.concatenate(data_cent[name_cent]["T"]) != 0
+#     ]
+#     for name_cent in data_cent.keys()
+# ]
+
+# axs.text(2, axs.get_ylim()[1] + 0.5, 'Main Label', ha='center', fontsize=12)
+axs[0].set_yscale("log")
+axs[0].set_title("Sw-ADMM")
+axs[1].set_title("RC-Sets")
+axs[0].set_ylabel(r"Time (s)")
+axs[1].set_ylabel(r"Time (s)")
+save2tikz(plt.gcf())
 
 # axs[1].set_ylabel(r"Time (s)")
 # axs[1].set_xlabel("Different initial states.")
