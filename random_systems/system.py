@@ -27,19 +27,7 @@ class RandomNetwork:
     R = [R1, R2, R3, R4]
     T = [T1, T2, T3, T4]
 
-    # S1 = np.array([[-1, 0]])
-    # R1 = np.zeros((1, 1))
-    # T1 = np.zeros((1, 1))
-
-    # S2 = np.array([[1, 0]])
-    # R2 = np.zeros((1, 1))
-    # T2 = np.zeros((1, 1))
-
-    # S = [S1, S2]
-    # R = [R1, R2]
-    # T = [T1, T2]
-
-    x_lim = 500
+    x_lim = 10
     D = np.array([[1, 0], [-1, 0], [0, 1], [0, -1]])
     E = np.array([[x_lim], [x_lim], [x_lim], [x_lim]])
 
@@ -56,14 +44,12 @@ class RandomNetwork:
         self.B = []
         self.c = []
         for i in range(4):
-            self.A.append(self.np_random.uniform(-2, 2, size=(2, 2)))
-            self.B.append(self.np_random.uniform(-2, 2, size=(2, 1)))
-            self.c.append(self.np_random.uniform(-2, 2, size=(2, 1)))
-            # self.A.append(np.array([[0.9, 0], [0, 0.9]]))
-            # self.B.append(np.array([[1], [1]]))
-            # self.c.append(np.array([[0], [0]]))
-        self.A_c = self.np_random.uniform(-0.2, 0.2, size=(2, 2))
-        # self.A_c = np.array([[0.2, 0], [0, 0.2]])
+            self.A.append(self.np_random.uniform(-1.5, 1.5, size=(2, 2)))
+            self.B.append(self.np_random.uniform(-1.5, 1.5, size=(2, 1)))
+            self.c.append(self.np_random.uniform(-1.5, 1.5, size=(2, 1)))
+
+        self.A_c = self.np_random.uniform(-0.1, 0.1, size=(2, 2))
+
         self.system = {
             "S": self.S,
             "R": self.R,
