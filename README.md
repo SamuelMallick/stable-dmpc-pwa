@@ -4,7 +4,7 @@
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 
-This repository contains the source code used to produce the results obtained in example 1 of [Distributed MPC for PWA Systems Based on Switching ADMM](https://arxiv.org/abs/2404.16712) submitted to [IEEE Transactions on Automatic Control](https://ieeexplore.ieee.org/xpl/RecentIssue.jsp?punumber=9).
+This repository contains the source code used to produce the results obtained in example 1 of [Distributed MPC for PWA Systems Based on Switching ADMM](https://ieeexplore.ieee.org/abstract/document/10778316) published in [IEEE Transactions on Automatic Control](https://ieeexplore.ieee.org/xpl/RecentIssue.jsp?punumber=9).
 
 In this work, we propose a novel approach for distributed MPC for PWA systems. The approach is based on a switching ADMM procedure that is developed to solve the globally formulated non-convex MPC optimal control problem distributively.
 
