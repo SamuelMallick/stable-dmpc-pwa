@@ -12,10 +12,11 @@ If you find the paper or this repository helpful in your publications, please co
 
 ```bibtex
 @article{mallick2024distributed,
-  title={Distributed MPC for PWA Systems Based on Switching ADMM},
+  title={Distributed Model Predictive Control for Piecewise Affine Systems Based on Switching ADMM},
   author={Mallick, Samuel and Dabiri, Azita and De Schutter, Bart},
-  journal={arXiv preprint arXiv:2404.16712},
-  year={2024}
+  journal={IEEE Transactions on Automatic Control},
+  year={2024},
+  publisher={IEEE}
 }
 ```
 
