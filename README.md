@@ -11,13 +11,12 @@ In this work, we propose a novel approach for distributed MPC for PWA systems. T
 If you find the paper or this repository helpful in your publications, please consider citing it.
 
 ```bibtex
-@article{
-    mallick2024distributed,
-    title={Distributed MPC for PWA Systems Based on Switching ADMM}, 
-    author={Samuel Mallick and Azita Dabiri and Bart De Schutter},
-    year={2024},
-    eprint={2404.16712},
-    archivePrefix={arXiv}
+@article{mallick2024distributed,
+  title={Distributed Model Predictive Control for Piecewise Affine Systems Based on Switching ADMM},
+  author={Mallick, Samuel and Dabiri, Azita and De Schutter, Bart},
+  journal={IEEE Transactions on Automatic Control},
+  year={2024},
+  publisher={IEEE}
 }
 ```
 
